@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<info>
+  <id>audit_logger</id>
+  <name>Audit Logger</name>
+  <description>Upload audit plugin</description>
+  <version>1.0.0</version>
+  <licence>AGPL</licence>
+</info>
