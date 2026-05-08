@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb:11
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextpass
+    volumes:
+      - db_data:/var/lib/mysql
+
+  redis:
+    image: redis:7
+    restart: always
+
+  app:
+    image: nextcloud:latest
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: nextpass
+      MYSQL_HOST: db
+      REDIS_HOST: redis
+    volumes:
+      - nextcloud_data:/var/www/html
+      - ./nextcloud/custom_apps:/var/www/html/custom_apps
+    depends_on:
+      - db
+      - redis
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+volumes:
+  db_data:
+  nextcloud_data:
